@@ -1,1 +1,4 @@
 # minic-learning
+一般我们都将神经网络放置到服务器上进行训练，所以在搭建和训练神经网络的时候并没有考虑到计算器资源的大小等等。但是当我们需将模型落地到某一硬件设施之中，如机器人或手机，设备的存储容量以及算力就成为模型的限制因素。为了使得模型能够嵌入到某一设备之中，我们通常会将模型进行压缩。压缩的方法主要有以下几种：  
+![image](image/network_compression.png)  
+在该项目中，我采用了第二种方法--知识蒸馏，来压缩网络模型的大小。在这里，我首先使用cifar10数据集来训练一个较大的网络。之后，我再使用teacher-student的模式来训练一个较小的网络。teacher-student模式模仿了老师与学生的关系，将teacher model所学到的知识教授给student model。在teacher-studet训练模型中，模型的训练空间不再是label space，而是logits space或者是probability space。据研究，模型在logits space或probability space更加容易训练。而且在logits space或probability space上，student model不再只学习到单一的标签信息，而会学习到多样的有效信息 。如teacher model给出的概率分布不仅会告诉student model输入的label还是告诉其input与其它label对应input的相似度，丰富了student model的知识。
