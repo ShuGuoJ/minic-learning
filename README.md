@@ -12,4 +12,11 @@ opencv 3.4
 ![image](image/vgg11.jpg)  
 ![image](image/vgg16.jpg)  
 ![image](image/teacher_student.jpg)  
-从上述的实验可知，与一般方法训练的vgg11相比，使用teacher-student模式训练的vgg11在精度上提高了2%左右。但是由于vgg11模型在cifar10数据集上本身就能够work，因为其train loss处于下降的趋势。所以，该实验并无法验证teacher-student的训练方法能够降低模型的训练难度。所以，接下来我想或许我们能够使用一个更加浅的网络来充当student网络来验证teacher-student的实用性。
+从上述的实验可知，与一般方法训练的vgg11相比，使用teacher-student模式训练的vgg11在精度上提高了2%左右。但是由于vgg11模型在cifar10数据集上本身就能够work，因为其train loss处于下降的趋势。所以，该实验并无法验证teacher-student的训练方法能够降低模型的训练难度。所以，接下来我想或许我们能够使用一个更加浅的网络来充当student网络来验证teacher-student的实用性。  
+由于student是在logits或probability空间上计算，所以它也可以使用mse来作为loss function。而且mse很有可能使得模型更加收敛或取得更好的性能。这只是个人直觉。模型的学习曲线和准确率如下所示，除了降低原先的学习率之外，其它的别无改动。  
+![image](image/teacher_student_mse.jpg)  
+从图中可知，模型的准确率达到了77%，其超越了使用信息熵为loss function训练的模型，同时其性能逼近teacher model。那么，为什么mse能够使得模型的性能提高呢？我绘画了一元的信息熵和均方差函数，如下所示:  
+![image](image/crossentropy.jpg)  
+![image](image/mse.jpg)  
+
+在crossentropy曲线中，最小值点的右边梯度较低，趋于0。这会导致模型的其区域内很难得到更新。而在最小值点左边的梯度较大，它会有可能使得模型掉入最小值点的左边或更远处。这使得模型训练不稳定以及难以到达最小值点。反观mse，其便没有如此缺点。这给我的启示是选择合适的loss function对模型的训练很重要。
